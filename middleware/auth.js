@@ -2,7 +2,7 @@ const { BadRequest, Unauthorised } = require("../errors");
 const jwt = require("jsonwebtoken");
 
 const authMiddleware = (req, res, next) => {
-  const authHeaders = req.headers.Authorization;
+  const authHeaders = req.headers.authorization;
   if (!authHeaders || !authHeaders.startsWith("Bearer ")) {
     throw new Unauthorised("No auth Headers");
   }

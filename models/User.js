@@ -43,4 +43,4 @@ UserSchema.methods.checkPassword = async function (inputPassword) {
   return isPasswordCorrect;
 };
 
-module.exports = new mongoose.model("User", UserSchema);
+module.exports = mongoose.model("User", UserSchema);

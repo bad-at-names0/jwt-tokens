@@ -1,21 +1,54 @@
+const { Unauthorised, NotFound } = require("../errors");
+const { StatusCodes } = require("http-status-codes");
+const Job = require("../models/jobs");
+
 const getAllJobs = async (req, res) => {
-  res.send("Gets all the jobs");
+  const userId = req.user.userId;
+  const jobs = await Job.find({ createdBy: userId }).sort("createdAt");
+  res.status(StatusCodes.OK).json({ jobs, nbHits: jobs.length });
 };
 
 const createJob = async (req, res) => {
-  res.send("creates a new job");
+  req.body.createdBy = req.user.userId;
+  const job = await Job.create(req.body);
+  res.status(StatusCodes.CREATED).json({ job });
 };
 
 const getJob = async (req, res) => {
-  res.send("Gets one job");
+  const userId = req.user.userId;
+  const jobId = req.params.id;
+  const job = await Job.findOne({ createdBy: userId, _id: jobId });
+  if (!job) {
+    throw new NotFound(`No such job found`);
+  }
+  res.status(StatusCodes.OK).json({ job });
 };
 
 const deleteJob = async (req, res) => {
-  res.send("Deletes a job");
+  const userId = req.user.userId;
+  const jobId = req.params.id;
+  const job = await Job.findOneAndDelete({ createdBy: userId, _id: jobId });
+  if (!job) {
+    throw new NotFound(`No such job found`);
+  }
+  res.status(StatusCodes.OK).send("Success");
 };
 
 const updateJob = async (req, res) => {
-  res.send("updates a job");
+  const userId = req.user.userId;
+  const jobId = req.params.id;
+  const job = await Job.findOneAndUpdate(
+    { createdBy: userId, _id: jobId },
+    req.body,
+    {
+      runValidators: true,
+      new: true,
+    }
+  );
+  if (!job) {
+    throw new NotFound(`No such job found`);
+  }
+  res.status(StatusCodes.CREATED).json({ job });
 };
 
 module.exports = {

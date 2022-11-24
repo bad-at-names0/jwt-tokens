@@ -14,6 +14,7 @@ const authMiddleware = (req, res, next) => {
     req.user = { userId, name };
     next();
   } catch (err) {
+    console.log(err);
     throw new Unauthorised(`Not valid auth header`);
   }
 };

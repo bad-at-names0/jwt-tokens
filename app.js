@@ -16,13 +16,13 @@ const authRouter = require("./routers/user");
 //middlewares
 const authMiddleware = require("./middleware/auth");
 const errorHandlerMiddleware = require("./middleware/error-handler");
-const notFound = require("./middleware/not-found");
+const notFoundpage = require("./middleware/not-found");
 
 //routes
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/jobs",authMiddleware , jobsRouter);
+app.use("/api/v1/jobs", authMiddleware, jobsRouter);
 app.use(errorHandlerMiddleware);
-app.use(notFound);
+app.use(notFoundpage);
 
 //connect to DB and start server
 const port = process.env.PORT || 3000;
